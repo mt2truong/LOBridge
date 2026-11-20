@@ -1,0 +1,293 @@
+// LOBridge: native (C++) COM server for LibreOffice, replacing the .NET Framework library.
+// Interface GUIDs and CLSIDs are kept identical to the .NET Framework COM server so existing callers keep working.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+typedef [v1_enum, uuid(A8B5D2E1-4F3C-4A87-9E2B-1D8C5A7F9B3E)]
+enum RowHeightRule { Auto = 0, AtLeast = 1, Exactly = 2 } RowHeightRule;
+
+// ---- forward declarations ----
+interface IWriterApp;
+interface IWriterDocument;
+interface IWriterRange;
+interface IWriterParagraph;
+interface IWriterStyle;
+interface IWriterFont;
+interface IWriterPageSetup;
+interface IWriterShape;
+interface IWriterTable;
+interface IWriterTableRow;
+interface IWriterTableCell;
+interface IWriterTableColumn;
+interface ICalcApp;
+interface ICalcWorkbook;
+interface ICalcWorksheet;
+interface ICalcRange;
+interface ICalcCell;
+
+// ======================= Word =======================
+
+[object, dual, oleautomation, pointer_default(unique), uuid(ED59FA07-BA94-4651-AEB1-F861A58B18DB)]
+interface IWriterApp : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [id(2)] HRESULT NewDoc([in] VARIANT_BOOL landscape, [in] float pageHeight, [in] float pageWidth,
+                           [out, retval] IWriterDocument** ppDoc);
+    [id(3)] HRESULT Open([in] BSTR filePath, [in] VARIANT_BOOL readOnly, [out, retval] IWriterDocument** ppDoc);
+    [propget, id(4)] HRESULT ActiveDocument([out, retval] IWriterDocument** ppDoc);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(04165BCA-4A1E-4727-95BD-1BD3FA124069)]
+interface IWriterDocument : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [id(2)] HRESULT SaveAs([in] BSTR filePath);
+    [id(3)] HRESULT Export([in] BSTR filePath, [in] BSTR format);
+    [id(4)] HRESULT Close();
+    [propget, id(5)] HRESULT PageCount([out, retval] long* pVal);
+    [propget, id(6)] HRESULT CharacterCount([out, retval] long* pVal);
+    [id(7)] HRESULT HasContent([out, retval] VARIANT_BOOL* pVal);
+    [id(8)] HRESULT GetTemplateName([in] BSTR filePath, [out, retval] BSTR* pVal);
+    [id(9)] HRESULT DeletePageByIndex([in] long pageIndex);
+    [propget, id(10)] HRESULT TableCount([out, retval] long* pVal);
+    [id(11)] HRESULT GetTable([in] long index, [out, retval] IWriterTable** ppVal);
+    [propget, id(12)] HRESULT StyleCount([out, retval] long* pVal);
+    [id(13)] HRESULT GetStyle([in] long index, [out, retval] IWriterStyle** ppVal);
+    [id(14)] HRESULT GetStyleByName([in] BSTR name, [out, retval] IWriterStyle** ppVal);
+    [propget, id(15)] HRESULT ShapeCount([out, retval] long* pVal);
+    [id(16)] HRESULT GetShape([in] long index, [out, retval] IWriterShape** ppVal);
+    [id(17)] HRESULT AddTextBox([in] long pageIndex, [out, retval] IWriterShape** ppVal);
+    [id(18)] HRESULT CreateShape([in] long pageIndex, [in] IWriterShape* sourceShape, [out, retval] IWriterShape** ppVal);
+    [id(19)] HRESULT CreateShape_2([in] long pageIndex, [in] BSTR shapeType, [out, retval] IWriterShape** ppVal);
+    [propget, id(20)] HRESULT PageSetup([out, retval] IWriterPageSetup** ppVal);
+    [propget, id(21)] HRESULT ParagraphCount([out, retval] long* pVal);
+    [id(22)] HRESULT GetParagraph([in] long index, [out, retval] IWriterParagraph** ppVal);
+    [id(23)] HRESULT AddNewParagraph([out, retval] IWriterParagraph** ppVal);
+    [id(24)] HRESULT ToggleShowHiddenText([in] VARIANT_BOOL flag);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(97171A27-24A9-4D4D-82D7-2EFC21D6E060)]
+interface IWriterRange : IDispatch {
+    [propget, id(1)] HRESULT PageSetup([out, retval] IWriterPageSetup** ppVal);
+    [propget, id(2)] HRESULT LineSpacingMode([out, retval] long* pVal);
+    [propput, id(2)] HRESULT LineSpacingMode([in] long value);
+    [propget, id(3)] HRESULT LineSpacingHeight([out, retval] float* pVal);
+    [propput, id(3)] HRESULT LineSpacingHeight([in] float value);
+    [propget, id(4)] HRESULT Start([out, retval] long* pVal);
+    [propput, id(4)] HRESULT Start([in] long value);
+    [propget, id(5)] HRESULT End([out, retval] long* pVal);
+    [propput, id(5)] HRESULT End([in] long value);
+    [propget, id(6)] HRESULT SpaceBefore([out, retval] float* pVal);
+    [propput, id(6)] HRESULT SpaceBefore([in] float value);
+    [propget, id(7)] HRESULT SpaceAfter([out, retval] float* pVal);
+    [propput, id(7)] HRESULT SpaceAfter([in] float value);
+    [propget, id(8)] HRESULT KeepTogetherNextParagraph([out, retval] VARIANT_BOOL* pVal);
+    [propput, id(8)] HRESULT KeepTogetherNextParagraph([in] VARIANT_BOOL value);
+    [id(9)] HRESULT GetRangeHeight([out, retval] float* pVal);
+    [id(10)] HRESULT GetVerticalPositionRelativeToPage([out, retval] float* pVal);
+    [id(11)] HRESULT GetStaticLines([out, retval] long* pVal);
+    [id(12)] HRESULT LinesToPoints([in] float value, [out, retval] float* pVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(32565F22-7707-4474-9EB1-6F26820C9BF3)]
+interface IWriterParagraph : IDispatch {
+    [propget, id(1)] HRESULT Text([out, retval] BSTR* pVal);
+    [propput, id(1)] HRESULT Text([in] BSTR value);
+    [id(2)] HRESULT GetRawText([out, retval] BSTR* pVal);
+    [propget, id(3)] HRESULT Font([out, retval] IWriterFont** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(9FEBE58B-9B2C-43A5-9AFE-CBBE20581F57)]
+interface IWriterStyle : IDispatch {
+    [propget, id(1)] HRESULT Name([out, retval] BSTR* pVal);
+    [propget, id(2)] HRESULT Font([out, retval] IWriterFont** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(79D5AAF8-5E30-4690-A60C-1A1099206970)]
+interface IWriterFont : IDispatch {
+    [propget, id(1)] HRESULT Name([out, retval] BSTR* pVal);
+    [propget, id(2)] HRESULT Size([out, retval] float* pVal);
+    [propput, id(2)] HRESULT Size([in] float value);
+    [propget, id(3)] HRESULT Bold([out, retval] long* pVal);
+    [propget, id(4)] HRESULT Italic([out, retval] long* pVal);
+    [propget, id(5)] HRESULT Underline([out, retval] long* pVal);
+    [propget, id(6)] HRESULT Color([out, retval] long* pVal);
+    [propget, id(7)] HRESULT Hidden([out, retval] VARIANT_BOOL* pVal);
+    [propput, id(7)] HRESULT Hidden([in] VARIANT_BOOL value);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(29321D04-DE50-4064-9C9B-E4E942D4021A)]
+interface IWriterPageSetup : IDispatch {
+    [propget, id(1)] HRESULT PaperSize([out, retval] BSTR* pVal);
+    [propget, id(2)] HRESULT PageWidth([out, retval] float* pVal);
+    [propget, id(3)] HRESULT PageHeight([out, retval] float* pVal);
+    [propget, id(4)] HRESULT LeftMargin([out, retval] float* pVal);
+    [propput, id(4)] HRESULT LeftMargin([in] float value);
+    [propget, id(5)] HRESULT RightMargin([out, retval] float* pVal);
+    [propput, id(5)] HRESULT RightMargin([in] float value);
+    [propget, id(6)] HRESULT TopMargin([out, retval] float* pVal);
+    [propput, id(6)] HRESULT TopMargin([in] float value);
+    [propget, id(7)] HRESULT BottomMargin([out, retval] float* pVal);
+    [propput, id(7)] HRESULT BottomMargin([in] float value);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(88066F85-A66C-4200-A049-D2970240546F)]
+interface IWriterShape : IDispatch {
+    [propget, id(1)] HRESULT Width([out, retval] float* pVal);
+    [propput, id(1)] HRESULT Width([in] float value);
+    [propget, id(2)] HRESULT Height([out, retval] float* pVal);
+    [propput, id(2)] HRESULT Height([in] float value);
+    [propget, id(3)] HRESULT LeftPosition([out, retval] float* pVal);
+    [propget, id(4)] HRESULT TopPosition([out, retval] float* pVal);
+    [propget, id(5)] HRESULT ShapeType([out, retval] BSTR* pVal);
+    [id(6)] HRESULT GetAlignment([out, retval] long* pVal);
+    [id(7)] HRESULT GetTextFont([out, retval] IWriterFont** ppVal);
+    [id(8)] HRESULT CopyFrom([in] IWriterShape* shape);
+    [propget, id(9)] HRESULT Text([out, retval] BSTR* pVal);
+    [propput, id(9)] HRESULT Text([in] BSTR value);
+    [propget, id(10)] HRESULT PageSetup([out, retval] IWriterPageSetup** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(B58F6AE4-CE77-4426-BAB2-931279BD19E7)]
+interface IWriterTable : IDispatch {
+    [propget, id(1)] HRESULT AllowAutoFit([out, retval] VARIANT_BOOL* pVal);
+    [propput, id(1)] HRESULT AllowAutoFit([in] VARIANT_BOOL value);
+    [propget, id(2)] HRESULT RowCount([out, retval] long* pVal);
+    [propget, id(3)] HRESULT ColumnCount([out, retval] long* pVal);
+    [propget, id(4)] HRESULT LeftPadding([out, retval] float* pVal);
+    [propput, id(4)] HRESULT LeftPadding([in] float value);
+    [propget, id(5)] HRESULT TopPadding([out, retval] float* pVal);
+    [propput, id(5)] HRESULT TopPadding([in] float value);
+    [propget, id(6)] HRESULT BottomPadding([out, retval] float* pVal);
+    [propput, id(6)] HRESULT BottomPadding([in] float value);
+    [propget, id(7)] HRESULT RightPadding([out, retval] float* pVal);
+    [propput, id(7)] HRESULT RightPadding([in] float value);
+    [id(8)] HRESULT GetRow([in] long index, [out, retval] IWriterTableRow** ppVal);
+    [id(9)] HRESULT GetColumn([in] long index, [out, retval] IWriterTableColumn** ppVal);
+    [id(10)] HRESULT Normalize();
+    [id(11)] HRESULT AddRow([in] IWriterTableRow* rowAfter, [out, retval] IWriterTableRow** ppVal);
+    [id(12)] HRESULT DeleteRow([in] IWriterTableRow* row);
+    [id(13)] HRESULT SetTabStops([out, retval] VARIANT_BOOL* pVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(77B5CBCB-ADA4-4468-B189-5446B957CA86)]
+interface IWriterTableRow : IDispatch {
+    [propget, id(1)] HRESULT Range([out, retval] IWriterRange** ppVal);
+    [propget, id(2)] HRESULT Height([out, retval] float* pVal);
+    [propput, id(2)] HRESULT Height([in] float value);
+    [propget, id(3)] HRESULT HeightRule([out, retval] RowHeightRule* pVal);
+    [propput, id(3)] HRESULT HeightRule([in] RowHeightRule value);
+    [propget, id(4)] HRESULT AllowSplit([out, retval] VARIANT_BOOL* pVal);
+    [propput, id(4)] HRESULT AllowSplit([in] VARIANT_BOOL value);
+    [propget, id(5)] HRESULT CellCount([out, retval] long* pVal);
+    [id(6)] HRESULT GetCell([in] long index, [out, retval] IWriterTableCell** ppVal);
+    [id(7)] HRESULT IsRepeatingRow([out, retval] VARIANT_BOOL* pVal);
+    [id(8)] HRESULT SetStyle([in] IWriterStyle* style);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(35EA0572-5239-47FD-B551-E93114DFD170)]
+interface IWriterTableColumn : IDispatch {
+    [propget, id(1)] HRESULT CellCount([out, retval] long* pVal);
+    [id(2)] HRESULT GetCell([in] long index, [out, retval] IWriterTableCell** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(10261806-9F68-4C84-AA9C-C956B966DC2F)]
+interface IWriterTableCell : IDispatch {
+    [propget, id(1)] HRESULT Style([out, retval] IWriterStyle** ppVal);
+    [propget, id(2)] HRESULT Range([out, retval] IWriterRange** ppVal);
+    [propget, id(3)] HRESULT Text([out, retval] BSTR* pVal);
+    [propput, id(3)] HRESULT Text([in] BSTR value);
+    [propget, id(4)] HRESULT Font([out, retval] IWriterFont** ppVal);
+    [propget, id(5)] HRESULT VerticalAlignment([out, retval] long* pVal);
+    [propput, id(5)] HRESULT VerticalAlignment([in] long value);
+    [propget, id(6)] HRESULT HorizontalAlignment([out, retval] long* pVal);
+    [propput, id(6)] HRESULT HorizontalAlignment([in] long value);
+    [propget, id(7)] HRESULT Width([out, retval] float* pVal);
+    [propput, id(7)] HRESULT Width([in] float value);
+    [propget, id(8)] HRESULT Height([out, retval] float* pVal);
+    [propput, id(8)] HRESULT Height([in] float value);
+    [propget, id(9)] HRESULT RightPadding([out, retval] float* pVal);
+    [propput, id(9)] HRESULT RightPadding([in] float value);
+    [propget, id(10)] HRESULT LeftPadding([out, retval] float* pVal);
+    [propput, id(10)] HRESULT LeftPadding([in] float value);
+    [propget, id(11)] HRESULT TopPadding([out, retval] float* pVal);
+    [propput, id(11)] HRESULT TopPadding([in] float value);
+    [propget, id(12)] HRESULT BottomPadding([out, retval] float* pVal);
+    [propput, id(12)] HRESULT BottomPadding([in] float value);
+    [id(13)] HRESULT GetActiveEndPageNumber([out, retval] long* pVal);
+    [id(14)] HRESULT ScrollIntoView([in] VARIANT_BOOL option);
+    [id(15)] HRESULT GetFirstColLeftDistance([out, retval] double* pVal);
+}
+
+// ======================= Excel =======================
+
+[object, dual, oleautomation, pointer_default(unique), uuid(C43A0D8A-B601-4880-B1D2-D4C42E312560)]
+interface ICalcApp : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [id(2)] HRESULT Open([in] BSTR filePath, [in] VARIANT_BOOL readOnly, [out, retval] ICalcWorkbook** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(8063F58A-5D3D-46C3-A85C-3748079100AB)]
+interface ICalcWorkbook : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [id(2)] HRESULT Save();
+    [id(3)] HRESULT Close();
+    [propget, id(4)] HRESULT WorksheetCount([out, retval] long* pVal);
+    [id(5)] HRESULT GetWorksheet([in] long index, [out, retval] ICalcWorksheet** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(C4F94F82-E4B5-4C9F-B5CD-77729CC7C7ED)]
+interface ICalcWorksheet : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [propget, id(2)] HRESULT UsedRange([out, retval] ICalcRange** ppVal);
+    [propget, id(3)] HRESULT Name([out, retval] BSTR* pVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(5EE9CCA2-84C2-49FB-BA17-7151B0B710D7)]
+interface ICalcRange : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [propget, id(2)] HRESULT RowCount([out, retval] long* pVal);
+    [propget, id(3)] HRESULT ColumnCount([out, retval] long* pVal);
+    [id(4)] HRESULT GetCell([in] long rowIndex, [in] long columnIndex, [out, retval] ICalcCell** ppVal);
+}
+
+[object, dual, oleautomation, pointer_default(unique), uuid(DB18D173-46D9-4964-8CCE-BEFFE5A83D84)]
+interface ICalcCell : IDispatch {
+    [id(1)] HRESULT Dispose();
+    [propget, id(2)] HRESULT RowIsHidden([out, retval] VARIANT_BOOL* pVal);
+    [propget, id(3)] HRESULT RowHeight([out, retval] float* pVal);
+    // ARGB value (0xAARRGGBB). The .NET version exposed System.Drawing.Color, which is not COM-marshalable.
+    [propget, id(4)] HRESULT Color([out, retval] long* pVal);
+    [propget, id(5)] HRESULT Text([out, retval] BSTR* pVal);
+    [propget, id(6)] HRESULT Value([out, retval] VARIANT* pVal);
+}
+
+// ======================= Type library =======================
+
+[uuid(6B1E2C7A-3F0D-4E8B-9A57-2D4C8F1B6E90), version(1.0), helpstring("LOBridge LibreOffice COM (native)")]
+library LOBridge {
+    importlib("stdole2.tlb");
+
+    interface IWriterApp;
+    interface IWriterDocument;
+    interface IWriterRange;
+    interface IWriterParagraph;
+    interface IWriterStyle;
+    interface IWriterFont;
+    interface IWriterPageSetup;
+    interface IWriterShape;
+    interface IWriterTable;
+    interface IWriterTableRow;
+    interface IWriterTableCell;
+    interface IWriterTableColumn;
+    interface ICalcApp;
+    interface ICalcWorkbook;
+    interface ICalcWorksheet;
+    interface ICalcRange;
+    interface ICalcCell;
+
+    [uuid(596EF499-A61F-4977-A257-D06A8C8D8E03), helpstring("LibreOffice Writer application")]
+    coclass WriterApp { [default] interface IWriterApp; };
+
+    [uuid(65ED3120-936C-4BEA-996E-C6C9CF35B179), helpstring("LibreOffice Calc application")]
+    coclass CalcApp { [default] interface ICalcApp; };
+}

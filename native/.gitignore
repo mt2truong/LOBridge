@@ -1,0 +1,21 @@
+generated/
+*.obj
+*.exe
+*.dll
+*.lib
+*.exp
+*.res
+*.tlb
+LOBridge.h
+LOBridge_i.c
+LOBridge_p.c
+dlldata.c
+
+# MSBuild outputs
+build/
+bin/
+*.pdb
+*.idb
+*.ilk
+*.tlog
+*.lastbuildstate

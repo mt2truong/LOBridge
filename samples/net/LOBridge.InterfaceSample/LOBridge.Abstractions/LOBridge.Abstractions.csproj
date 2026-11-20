@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>LOBridge.Abstractions</RootNamespace>
+  </PropertyGroup>
+
+  <!-- No COM reference here: the application codes against these interfaces only. -->
+
+</Project>

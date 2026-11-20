@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmokeTest.exe: drives the Writer and Calc classes through their C++ interfaces. No COM registration is needed. -->
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2F9B6C40-8E1A-4D57-A3C8-0B6E9D5F7A21}</ProjectGuid>
+    <RootNamespace>SmokeTest</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>SmokeTest</ProjectName>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Release'">false</UseDebugLibraries>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="..\..\LOBridge.props" />
+
+  <PropertyGroup>
+    <OutDir>$(MSBuildThisFileDirectory)..\..\bin\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)..\..\build\smoke\$(Configuration)\</IntDir>
+    <TargetName>SmokeTest</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <StackReserveSize>16777216</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <Midl Include="..\..\idl\LOBridge.idl" />
+    <ClCompile Include="SmokeTest.cpp" />
+    <!-- The same implementation sources as the DLL, except Dll.cpp (no COM entry points here). -->
+    <ClCompile Include="..\..\src\common\Common.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\Config.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\Zip.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\uno\Uno.cpp">
+      <ObjectFileName>$(IntDir)uno\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\App.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Document.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Font.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\PageSetup.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Paragraph.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Range.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Shape.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Style.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\Table.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\TableCell.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\TableColumn.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\writer\TableRow.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\calc\App.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\calc\Cell.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\calc\Range.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\calc\Workbook.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\calc\Worksheet.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\generated\LOBridge_i.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+</Project>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LOBridge.dll: the native COM server (x64). Build with Visual Studio or: msbuild LOBridge.vcxproj /p:Configuration=Release /p:Platform=x64 -->
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7A1C0E52-3B8D-4F6A-9C21-5E0D8B7A4F13}</ProjectGuid>
+    <RootNamespace>LOBridge</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>LOBridge</ProjectName>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Release'">false</UseDebugLibraries>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">false</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="LOBridge.props" />
+
+  <PropertyGroup>
+    <OutDir>$(MSBuildThisFileDirectory)bin\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)build\$(Configuration)\</IntDir>
+    <TargetName>LOBridge</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>idl\LOBridge.def</ModuleDefinitionFile>
+      <ImportLibrary>$(IntDir)LOBridge.lib</ImportLibrary>
+    </Link>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <!-- The IDL is the contract: midl writes the C++ header, the IID source and the type library into generated\. -->
+    <Midl Include="idl\LOBridge.idl" />
+    <ResourceCompile Include="idl\LOBridge.rc" />
+    <None Include="idl\LOBridge.def" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClCompile Include="src\common\Common.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\common\Config.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\common\Zip.cpp">
+      <ObjectFileName>$(IntDir)common\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\uno\Uno.cpp">
+      <ObjectFileName>$(IntDir)uno\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\com\Dll.cpp">
+      <ObjectFileName>$(IntDir)com\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\App.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Document.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Font.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\PageSetup.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Paragraph.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Range.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Shape.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Style.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\Table.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\TableCell.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\TableColumn.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\writer\TableRow.cpp">
+      <ObjectFileName>$(IntDir)writer\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\calc\App.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\calc\Cell.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\calc\Range.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\calc\Workbook.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\calc\Worksheet.cpp">
+      <ObjectFileName>$(IntDir)calc\%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="generated\LOBridge_i.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
+</Project>
