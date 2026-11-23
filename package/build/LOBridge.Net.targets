@@ -1,0 +1,14 @@
+<Project>
+
+  <!--
+    Copies the native COM server next to the program that uses the package.
+    The DLL is still a COM server: it has to be registered once with regsvr32 before
+    Type.GetTypeFromProgID or CoCreateInstance can find LOBridge.Writer.App or LOBridge.Calc.App.
+  -->
+  <Target Name="LOBridgeCopyNative" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)native\LOBridge.dll"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

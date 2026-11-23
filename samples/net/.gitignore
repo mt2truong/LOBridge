@@ -2,7 +2,4 @@ bin/
 obj/
 *.user
 .vs/
-LOBridge.Sample/lib/
-bin/
-obj/
-LOBridge.Tests/lib/
+LOBridge.Sample.Direct/lib/

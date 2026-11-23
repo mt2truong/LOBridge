@@ -73,21 +73,29 @@ These are the same identifiers as the .NET Framework server, so existing callers
 The .NET sample uses early-bound interop types. Generate the assembly from the type library after the native DLL is built:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File samples\net\tools\Generate-Interop.ps1
+powershell -ExecutionPolicy Bypass -File tools\Generate-Interop.ps1
 ```
 
-The script runs the x64 `TlbImp.exe` from the Windows SDK NETFX tools and writes `samples\net\LOBridge.Sample\lib\Interop.LOBridge.dll`. Regenerate it whenever `LOBridge.idl` changes.
+The script runs the x64 `TlbImp.exe` from the Windows SDK NETFX tools and writes `samples\net\LOBridge.Sample.Direct\lib\Interop.LOBridge.dll`. Regenerate it whenever `LOBridge.idl` changes.
 
 Callers then create objects with `new WriterAppClass()`, `new CalcAppClass()` and use the `IWriterDocument`, `ICalcWorkbook`, and other interfaces. No `Activator.CreateInstance` is needed.
 
 ## Run the .NET sample
 
 ```powershell
-cd samples\net\LOBridge.Sample
+cd samples\net\LOBridge.Sample.Direct
 dotnet run -c Release -- C:\temp\lobridge-out sample.csv
 ```
 
 The sample writes `sample.docx` and `sample.pdf` into the output folder and prints the contents of the CSV.
+
+## Pack the NuGet package
+
+```powershell
+powershell -ExecutionPolicy Bypass -File package\Pack.ps1
+```
+
+The script builds the native DLL, regenerates the interop assembly into `package\lib`, and runs `dotnet pack`. The result is `package\nupkg\LOBridge.Net.1.0.0.nupkg`. `samples\net\LOBridge.Sample.Package` reads that folder through its `nuget.config`. If you pack again with the same version, clear the cache first with `dotnet nuget locals global-packages --clear`.
 
 ## Run the .NET tests
 

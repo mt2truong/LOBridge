@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>LOBridge.Sample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Early-bound interop types generated from native/generated/LOBridge.tlb by tools/Generate-Interop.ps1 at the repository root. -->
+    <Reference Include="Interop.LOBridge">
+      <HintPath>lib\Interop.LOBridge.dll</HintPath>
+      <!-- Coclass types such as WordAppClass cannot be embedded, so the interop DLL is copied next to the sample. -->
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

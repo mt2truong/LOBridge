@@ -264,7 +264,7 @@ The smoke test is a separate program. It links the same objects, but without `Dl
 
 ### After the DLL is built: the .NET side
 
-- `samples/net/tools/Generate-Interop.ps1` runs `tlbimp` on `LOBridge.tlb`. The result is `Interop.LOBridge.dll`, a .NET assembly with `WriterAppClass`, `IWriterDocument`, and the other types the C# code uses.
+- `tools/Generate-Interop.ps1` runs `tlbimp` on `LOBridge.tlb`. The result is `Interop.LOBridge.dll`, a .NET assembly with `WriterAppClass`, `IWriterDocument`, and the other types the C# code uses.
 - `regsvr32` (run by you, as administrator) writes the CLSID and ProgID entries into the registry, and registers the type library.
 
 ### Why the SDK is not needed to run
