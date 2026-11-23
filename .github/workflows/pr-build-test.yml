@@ -1,0 +1,69 @@
+# Builds the native COM server and runs the C++ smoke test, the .NET tests and both .NET samples
+# for every pull request. Runs on a GitHub-hosted Windows runner (free for public repositories).
+name: PR build and test
+
+on:
+  pull_request:
+    branches: [main, dev, dev2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: windows-2022
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install LibreOffice
+        shell: pwsh
+        run: choco install libreoffice-fresh -y --no-progress
+
+      - name: Check that LibreOffice and its SDK are present
+        shell: pwsh
+        run: |
+          $program = "C:\Program Files\LibreOffice\program\soffice.exe"
+          $sdkHeader = "C:\Program Files\LibreOffice\sdk\include\com\sun\star\uno\Any.hxx"
+          if (-not (Test-Path $program)) { throw "soffice.exe not found at $program" }
+          if (-not (Test-Path $sdkHeader)) {
+              throw "LibreOffice SDK headers not found. The native build needs the SDK (see docs/BUILD.md)."
+          }
+          & $program --version
+
+      - name: Build native DLL and run C++ smoke test
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File native\build.ps1 -Configuration Release -Test
+
+      - name: Register LOBridge.dll (the runner is administrator)
+        shell: pwsh
+        run: |
+          $dll = Join-Path $env:GITHUB_WORKSPACE "native\bin\LOBridge.dll"
+          & regsvr32.exe /s $dll
+          if ($LASTEXITCODE -ne 0) { throw "regsvr32 failed with exit code $LASTEXITCODE" }
+
+      - name: Run .NET tests
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File tests\net\tools\Run-Tests.ps1
+
+      - name: Build the package and the package sample
+        shell: pwsh
+        run: |
+          powershell -ExecutionPolicy Bypass -File package\Pack.ps1 -Configuration Release
+          if ($LASTEXITCODE -ne 0) { throw "Pack.ps1 failed" }
+          dotnet build samples\net\LOBridge.Sample.Package\LOBridge.Sample.Package.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw "package sample build failed" }
+
+      - name: Build the direct sample
+        shell: pwsh
+        run: |
+          dotnet build samples\net\LOBridge.Sample.Direct\LOBridge.Sample.Direct.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { throw "direct sample build failed" }
