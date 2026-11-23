@@ -48,4 +48,5 @@ tests/net/LOBridge.Tests/lib/
 # Original .NET Framework sources kept locally for comparison (not part of the repository)
 reference-dotnet/
 
+# Visual Studio per-user state
 .vs/

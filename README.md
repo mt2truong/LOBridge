@@ -20,8 +20,8 @@ A COM component integrates the LibreOffice SDK with .NET. The SDK's managed UNO 
 | Path | Contents |
 | --- | --- |
 | [`native/`](native/) | C++ COM server, IDL, build script, smoke test |
-| [`samples/net/`](samples/net/) | .NET 10 sample console application |
-| [`reference-dotnet/`](reference-dotnet/) | Original .NET Framework sources, for comparison |
+| [`package/`](package/) | NuGet package `LOBridge.Net`: interfaces, COM adapter, interop types, native DLL |
+| [`samples/net/`](samples/net/) | Two .NET 10 samples: direct use of `LOBridge.dll`, and use through the package |
 | [`docs/`](docs/) | Architecture, API reference, build guide, troubleshooting |
 
 ## Requirements
@@ -49,13 +49,13 @@ A COM component integrates the LibreOffice SDK with .NET. The SDK's managed UNO 
 3. Generate the .NET interop assembly from the type library:
 
    ```powershell
-   powershell -ExecutionPolicy Bypass -File samples\net\tools\Generate-Interop.ps1
+   powershell -ExecutionPolicy Bypass -File tools\Generate-Interop.ps1
    ```
 
 4. Run the .NET sample:
 
    ```powershell
-   cd samples\net\LOBridge.Sample
+   cd samples\net\LOBridge.Sample.Direct
    dotnet run -c Release -- C:\temp\lobridge-out sample.csv
    ```
 
@@ -94,7 +94,8 @@ Details and workarounds are in [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 - `native\build.ps1 -Test` builds and runs the C++ smoke test, which covers Writer and Calc.
 - `tests\net\LOBridge.Tests` is an xUnit project for .NET 10 with 15 tests: Writer, Calc and registration. Run it with `powershell -ExecutionPolicy Bypass -File tests\net\tools\Run-Tests.ps1`. See [tests/net/README.md](tests/net/README.md).
-- `samples\net\LOBridge.Sample` exercises the COM surface from .NET 10.
+- `samples\net\LOBridge.Sample.Direct` exercises the COM surface from .NET 10 (early-bound, `LOBridge.dll` directly).
+- `samples\net\LOBridge.Sample.Package` does the same through the `LOBridge.Net` package (`package\Pack.ps1` first).
 
 ## Contributing
 

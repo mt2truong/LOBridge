@@ -2,7 +2,7 @@
 # Usage: powershell -ExecutionPolicy Bypass -File Run-Tests.ps1
 $ErrorActionPreference = "Stop"
 $root = Join-Path $PSScriptRoot "..\..\.."
-& (Join-Path $root "samples\net\tools\Generate-Interop.ps1") -Out (Join-Path $PSScriptRoot "..\LOBridge.Tests\lib\Interop.LOBridge.dll")
+& (Join-Path $root "tools\Generate-Interop.ps1") -Out (Join-Path $PSScriptRoot "..\LOBridge.Tests\lib\Interop.LOBridge.dll")
 if ($LASTEXITCODE -ne 0) { throw "Generate-Interop failed" }
 Push-Location (Join-Path $PSScriptRoot "..\LOBridge.Tests")
 try {
